@@ -4,3 +4,5 @@ pandas
 numpy
 plotly
 python-multipart
+google-generativeai
+python-dotenv

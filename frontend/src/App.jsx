@@ -44,15 +44,15 @@ const DashboardHeader = ({ rowCount }) => (
     transition={{ duration: 0.8, ease: "easeOut" }}
   >
     <h1 className="text-4xl font-bold text-cyan-400" style={{ textShadow: "0 0 10px var(--primary-glow)" }}>
-      Stock Market Data Visualization
+       Stock Market Data Visualization
     </h1>
     <p className="text-gray-400 mt-2">
-      An interactive dashboard exploring historical stock data.
+       An interactive dashboard exploring historical stock data.
     </p>
     <div className="mt-4 inline-block p-3 px-5 bg-cyan-900/50 border border-cyan-500/50 rounded-md">
-      <span className="font-bold text-xl text-white">{rowCount}</span>
-      <span className="text-gray-300 ml-2">Data Rows Loaded</span>
-    </div>
+  <span className="font-bold text-xl text-white">{rowCount}</span>{" "}
+  <span className="text-gray-300">Data Rows Loaded</span>
+</div>
   </motion.div>
 );
 
@@ -116,6 +116,57 @@ const AboutSection = () => (
     </ChartCard>
   </section>
 );
+const AnalysisSection = () => {
+  const [analysis, setAnalysis] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAnalysis = () => {
+    setIsLoading(true);
+    setAnalysis(""); // Clear previous analysis
+    fetch("http://127.0.0.1:8000/api/analyze?nrows=100")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.analysis) {
+          setAnalysis(data.analysis);
+        } else {
+          setAnalysis("Error: Could not retrieve analysis.");
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setAnalysis("Error: Failed to connect to the backend.");
+        setIsLoading(false);
+      });
+  };
+
+  return (
+    <section id="analysis" className="mt-12">
+      <h2 className="text-3xl font-bold mb-6 text-cyan-400" style={{ textShadow: "0 0 6px var(--primary-glow)" }}>
+        🤖 AI-Powered Analysis
+      </h2>
+      <ChartCard>
+        <div className="p-4 text-gray-300">
+          <p className="mb-4">
+            Click the button below to get an AI-generated summary of the recent trends for this stock, powered by Gemini.
+          </p>
+          <button
+            onClick={handleAnalysis}
+            disabled={isLoading}
+            className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-4 rounded-lg transition-all disabled:bg-gray-600"
+          >
+            {isLoading ? "Analyzing..." : "Generate Insights"}
+          </button>
+
+          {analysis && (
+            <div className="mt-6 p-4 bg-black/30 border border-cyan-500/30 rounded-lg whitespace-pre-wrap">
+              <p>{analysis}</p>
+            </div>
+          )}
+        </div>
+      </ChartCard>
+    </section>
+  );
+};
 
 function App() {
   const [init, setInit] = useState(false);
@@ -162,6 +213,7 @@ function App() {
       <div className="relative z-10">
         <Layout>
           <DashboardHeader rowCount="1000" />
+          <AnalysisSection />
           <ChartsSection />
           <AboutSection />
         </Layout>
