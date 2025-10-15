@@ -1,3 +1,5 @@
+// frontend/src/App.jsx
+
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -19,14 +21,18 @@ const ChartCard = ({ children }) => (
   </motion.div>
 );
 
+// --- CHANGE #1: UPDATE THE LAYOUT COMPONENT ---
+// We've wrapped the flex container in a div that will center it and add padding.
 const Layout = ({ children }) => (
-  <div className="flex min-h-screen">
-    <aside className="w-64 bg-black border-r border-cyan-500/80 p-4 flex flex-col sticky top-0 h-screen">
-      <h1 className="text-2xl font-bold text-cyan-400 mb-8" style={{ textShadow: "0 0 8px #0ff" }}>
-        <center>📈 VizDash</center>
-      </h1>
-    </aside>
-    <main className="flex-1 p-8 overflow-y-auto">{children}</main>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex">
+      <aside className="w-64 bg-black border-r border-cyan-500/80 p-4 flex flex-col sticky top-0 h-screen">
+        <h1 className="text-2xl font-bold text-cyan-400 mb-8" style={{ textShadow: "0 0 8px #0ff" }}>
+          <center>📈 VizDash</center>
+        </h1>
+      </aside>
+      <main className="flex-1 p-8 overflow-y-auto">{children}</main>
+    </div>
   </div>
 );
 
@@ -151,6 +157,8 @@ function App() {
           detectRetina: true,
         }}
       />
+      
+      {/* --- CHANGE #2: REMOVED THE WRAPPER FROM AROUND <Layout /> --- */}
       <div className="relative z-10">
         <Layout>
           <DashboardHeader rowCount="1000" />
